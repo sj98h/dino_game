@@ -7,8 +7,16 @@ const socket = io("http://localhost:3000", {
 });
 
 let userId = null;
+let onStageUpdate = null;
+
 socket.on("response", (data) => {
   console.log(data);
+  if (data.status === "success" && data.updatedStage !== undefined) {
+    if (onStageUpdate) {
+      onStageUpdate(data.updatedStage);
+    }
+  }
+  return data.updatedStage;
 });
 
 socket.on("connection", (data) => {
@@ -25,4 +33,8 @@ const sendEvent = (handlerId, payload) => {
   });
 };
 
-export { sendEvent };
+const setStageUpdateCallback = (callback) => {
+  onStageUpdate = callback;
+};
+
+export { sendEvent, setStageUpdateCallback };

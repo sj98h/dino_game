@@ -25,7 +25,7 @@ export const moveStageHandler = (userId, payload) => {
 
   //  1스테이지 -> 2스테이지로 넘어가는 과정
   //   5-> 임의로 정한 오차범위
-  if (elapsedTime < 10 || elapsedTime > 10.5) {
+  if (elapsedTime < 5 || elapsedTime > 20) {
     return { status: "fail", message: "Invalid elapsed time" };
   }
 
@@ -35,7 +35,8 @@ export const moveStageHandler = (userId, payload) => {
     return { status: "fail", message: "Target stage not found" };
   }
 
-  setStage(userId, payload.targetStage, serverTime);
+  // 스테이지 업데이트 클라이언트로 결과 전송
+  const updatedStage = setStage(userId, payload.targetStage, serverTime);
 
-  return { status: "success" };
+  return { status: "success", updatedStage };
 };
