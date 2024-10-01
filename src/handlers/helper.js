@@ -1,7 +1,5 @@
-import { getGameAssets } from "../init/assets.js";
-import { removeUser } from "../models/user.models.js";
 import handlerMappings from "./handlerMapping.js";
-import { getUser } from "../models/user.models.js";
+import { getUser, removeUser } from "../models/user.models.js";
 import { CLIENT_VERSION } from "../../public/Constants.js";
 import { createStage } from "../models/stage.models.js";
 

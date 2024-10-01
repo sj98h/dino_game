@@ -11,7 +11,7 @@ export const gameStart = (uuid, payload) => {
 
   return { status: "success" };
 };
-export const gameEnd = () => {
+export const gameEnd = (uuid, payload) => {
   // 클라이언트는 게임 종료 시 타임스탬프와 총 점수
   const { timestamp: gameEndTime, score } = payload;
   const stages = getStage(uuid);
