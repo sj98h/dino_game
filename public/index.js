@@ -172,6 +172,11 @@ function reset() {
   gameSpeed = GAME_SPEED_START;
   itemController.reset();
   sendEvent(2, { timeStamp: Date.now() });
+
+  const title = document.getElementById("title");
+  if (title) {
+    title.style.display = "none";
+  }
 }
 
 function setupGameReset() {
