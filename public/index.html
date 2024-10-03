@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dino Game</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100vh;
+
+        user-select: none;
+        touch-action: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        outline: none;
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+      }
+      canvas {
+        border: 2px solid grey;
+      }
+      div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+      div h1 {
+        animation: rotate 2s ease-in-out;
+      }
+      div h2 {
+        animation: slideIn 1s ease-out 2s;
+        transform: translateX(-100%);
+        animation-fill-mode: forwards;
+        opacity: 0;
+      }
+
+      @keyframes slideIn {
+        0% {
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+        100% {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(180deg);
+        }
+        50% {
+          transform: rotate(180deg);
+        }
+        100% {
+          transform: rotate(0deg);
+        }
+      }
+    </style>
+    <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+    <script src="./index.js" type="module"></script>
+  </head>
+  <body>
+    <div>
+      <h1>육군</h1>
+      <h2>런</h2>
+    </div>
+    <canvas id="game"></canvas>
+  </body>
+</html>

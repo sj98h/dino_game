@@ -1,0 +1,22 @@
+{
+  "name": "avoid_planet",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "repository": "https://github.com/hanwj75/avoid_planet.git",
+  "author": "hanwj75 <wjws9608@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "socket.io": "^4.8.0",
+    "uuid": "^10.0.0",
+    "yarn": "^1.22.22"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3"
+  }
+}
