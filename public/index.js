@@ -143,18 +143,18 @@ function showGameOver() {
   const fontSize = 50 * scaleRatio;
   ctx.font = `${fontSize}px Verdana`;
   ctx.fillStyle = "red";
-  const x = canvas.width / 4.5;
+  const x = canvas.width / 3;
   const y = canvas.height / 2;
   ctx.fillText("작업 가야지?", x, y);
 }
 
 function showStartGameText() {
-  const fontSize = 45 * scaleRatio;
+  const fontSize = 20 * scaleRatio;
   ctx.font = `${fontSize}px Verdana`;
-  ctx.fillStyle = "Pink";
-  const x = canvas.width / 14;
-  const y = canvas.height / 2;
-  ctx.fillText("전역까지 545일", x, y);
+  ctx.fillStyle = "";
+  const x = canvas.width / 2.4;
+  const y = canvas.height / 1.2;
+  ctx.fillText("SPACE로 입대", x, y);
 }
 
 function updateGameSpeed(deltaTime) {
@@ -170,6 +170,7 @@ function reset() {
   cactiController.reset();
   score.reset();
   gameSpeed = GAME_SPEED_START;
+  itemController.reset();
   sendEvent(2, { timeStamp: Date.now() });
 }
 
@@ -248,6 +249,12 @@ function gameLoop(currentTime) {
 // 게임 프레임을 다시 그리는 메서드
 requestAnimationFrame(gameLoop);
 
-window.addEventListener("keyup", reset, { once: true });
+let once = true;
+window.addEventListener("keyup", (e) => {
+  if (e.key === " " && once) {
+    reset();
+    once = false;
+  }
+});
 
 export { score };

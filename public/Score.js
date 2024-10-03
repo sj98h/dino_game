@@ -6,7 +6,6 @@ import items from "./assets/item.json" with { type: "json" };
 class Score {
   score = 0;
   HIGH_SCORE_KEY = "highScore";
-  stageChange = true;
   stageIndex = 0;
 
   constructor(ctx, scaleRatio) {
@@ -17,21 +16,17 @@ class Score {
 
   update(deltaTime) {
     this.score += (deltaTime + stages.data[this.stageIndex].scorePerSecond) * 0.001;
-    if (Math.floor(this.score) % 100 === 0 && this.stageChange) {
-      this.stageChange = false;
-
+    if (Math.floor(this.score) > stages.data[this.stageIndex].score) {
       console.log("현재 스테이지:", stages.data[this.stageIndex].id);
       if (this.stageIndex + 1 < stages.data.length) {
         sendEvent(11, {
           currentStage: stages.data[this.stageIndex].id,
           targetStage: stages.data[this.stageIndex + 1].id,
           clientScore: this.score,
+          stageIndex: this.stageIndex,
         });
         this.stageIndex += 1;
       }
-    }
-    if (Math.floor(this.score) % 100 !== 0) {
-      this.stageChange = true;
     }
   }
 
@@ -39,12 +34,16 @@ class Score {
     for (let i = 0; i < items.data.length; i++) {
       if (itemId === items.data[i].id) {
         this.score += items.data[i].score;
+        sendEvent(10, {
+          currentItem: items.data[i].id,
+          stageIndex: this.stageIndex,
+        });
       }
     }
   }
   reset() {
     this.score = 0;
-    this.stageIndex = 0;
+    this.stageIndex = 1;
   }
 
   setHighScore() {
