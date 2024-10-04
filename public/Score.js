@@ -72,9 +72,28 @@ class Score {
     const highScorePadded = highScore.toString().padStart(6, 0);
 
     // "STAGE" 텍스트를 맨 왼쪽에 배치
-    const stageText = `STAGE ${this.stageIndex}`;
+    let stageText;
+    switch (this.stageIndex) {
+      case 1:
+        stageText = "이병";
+        break;
+      case 2:
+        stageText = "일병";
+        break;
+      case 3:
+        stageText = "상병";
+        break;
+      case 4:
+        stageText = "병장";
+        break;
+      case 5:
+        stageText = "전문하사";
+        break;
+      default:
+        stageText = this.stageIndex;
+    }
     const stageX = 20 * this.scaleRatio; // 왼쪽 여백
-    this.ctx.fillText(stageText, stageX, y);
+    this.ctx.fillText(`STAGE: ${stageText}`, stageX, y);
 
     this.ctx.fillText(`복무일: ${scorePadded}`, scoreX, y);
     this.ctx.fillText(`HI ${highScorePadded}`, highScoreX, y);
