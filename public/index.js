@@ -192,7 +192,7 @@ function clearScreen() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-function gameLoop(currentTime) {
+async function gameLoop(currentTime) {
   if (previousTime === null) {
     previousTime = currentTime;
     requestAnimationFrame(gameLoop);
@@ -220,8 +220,13 @@ function gameLoop(currentTime) {
     score.update(deltaTime);
   }
 
+  // 게임오버시 3번 sendevent
   if (!gameover && cactiController.collideWith(player)) {
     gameover = true;
+    await sendEvent(3, {
+      timeStamp: Date.now(),
+      score: score.score,
+    });
     score.setHighScore();
     setupGameReset();
   }

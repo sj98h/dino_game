@@ -1,10 +1,11 @@
-import { sendEvent } from "./Socket.js";
+import { sendEvent, userId } from "./Socket.js";
 import stages from "./assets/stage.json" with { type: "json" };
 import itemUnlock from "./assets/item_unlock.json" with { type: "json" };
 import items from "./assets/item.json" with { type: "json" };
 
 class Score {
   score = 0;
+  highScore = 0;
   HIGH_SCORE_KEY = "highScore";
   stageIndex = 0;
 
@@ -46,10 +47,19 @@ class Score {
     this.stageIndex = 1;
   }
 
-  setHighScore() {
-    const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
-    if (this.score > highScore) {
-      localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score));
+  // 로컬스토리지에 하이스코어를 저장하고 있음
+  async setHighScore() {
+    // Redis에 기록된 하이스코어 조회
+    // 근데 프론트에선 redisClient에 직접 접근이 불가능하다
+    // 하이스코어 조회 api 작성후 fetch로 호출하여 접근...
+    try {
+      const res = await fetch(`/api/get-highscore/${userId}`);
+      const data = await res.json();
+
+      console.log("하이스코어:", data.highScore);
+      this.highScore = data.highScore;
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -58,7 +68,6 @@ class Score {
   }
 
   draw() {
-    const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
     const y = 20 * this.scaleRatio;
 
     const fontSize = 20 * this.scaleRatio;
@@ -69,7 +78,7 @@ class Score {
     const highScoreX = scoreX - 125 * this.scaleRatio;
 
     const scorePadded = Math.floor(this.score).toString().padStart(6, 0);
-    const highScorePadded = highScore.toString().padStart(6, 0);
+    const highScorePadded = this.highScore.toString().padStart(6, 0);
 
     // "STAGE" 텍스트를 맨 왼쪽에 배치
     let stageText;

@@ -1,5 +1,6 @@
 import { getGameAssets } from "../init/assets.js";
 import { clearStage, getStage, setStage } from "../models/stage.model.js";
+import { redisClient } from "../app.js";
 
 export const gameStart = (uuid, payload) => {
   //접속하자마자 시작함
@@ -14,10 +15,28 @@ export const gameStart = (uuid, payload) => {
   return { status: "success" };
 };
 
-export const gameEnd = (uuid, payload) => {
+export const gameEnd = async (uuid, payload) => {
   //게임 종료 시 타임스탬프와 총 점수
   const { timeStamp: gameEndTime, score } = payload;
   const stages = getStage(uuid);
+
+  // *redis에 uuid, 점수, 시간 기록 (Sorted Sets ZSets)
+
+  // 1. 유저 개개인의 하이스코어를 기록하여 localStorage 대신 사용
+  // 1-1. 하이스코어에 해당하는 타임스탬프는 별도로 관리
+  // 2. 리더보드는 1에서 기록한 값들을 모두 모아 내부 로직에서 특정 순위까지 조회 (top 10)
+
+  // 기존 하이스코어가 없으면 새로 생성
+  const created = await redisClient.zadd(uuid, "NX", Math.floor(score), "highScore");
+  // 기존 하이스코어가 있으면 새 점수가 더 클 때만 업데이트
+  const updated = await redisClient.zadd(uuid, "XX", "GT", Math.floor(score), "highScore");
+  // 저장 시점
+  console.log(`${uuid} 게임오버: redis 업데이트`);
+
+  // 하이스코어 새로 기록되면 타임스탬프 별도로 저장
+  if (created || updated) {
+    await redisClient.hset(`${uuid}:timestamp`, "highScoreTimestamp", gameEndTime);
+  }
 
   if (!stages.length) {
     return { status: "fail", message: "스테이지가 이상합니다." };

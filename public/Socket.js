@@ -16,7 +16,7 @@ socket.on("connection", (data) => {
   userId = data.uuid;
 });
 
-const sendEvent = (handlerId, payload) => {
+const sendEvent = async (handlerId, payload) => {
   socket.emit("event", {
     userId,
     clientVersion: CLIENT_VERSION,
@@ -25,4 +25,4 @@ const sendEvent = (handlerId, payload) => {
   });
 };
 
-export { sendEvent };
+export { sendEvent, userId };
