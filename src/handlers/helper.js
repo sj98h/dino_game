@@ -4,6 +4,7 @@ import { createItems } from "../models/item.model.js";
 import { createStage, getStage, setStage } from "../models/stage.model.js";
 import { getUser, removeUser } from "../models/user.model.js";
 import handlerMapping from "./handlerMapping.js";
+import { redisClient } from "../app.js";
 
 export const handleDisconnect = (socket, uuid) => {
   removeUser(socket.id);

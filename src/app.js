@@ -26,24 +26,24 @@ server.listen(PORT, async () => {
   }
 });
 
+// redis 연결
 import Redis from "ioredis";
-// const dotenv = require('dotenv');
-// dotenv.config(); // env환경변수 파일 가져오기
+import dotenv from "dotenv";
+
+dotenv.config(); // env환경변수 파일 가져오기
+
 const redisClient = new Redis({
-  host: "redis-10913.c340.ap-northeast-2-1.ec2.redns.redis-cloud.com", // Redis 클라우드 호스트
-  port: "10913", // Redis 클라우드 포트
-  password: "tPgvUPy6ocqVj47ZymHyJsKX6TMLhuRa", // Redis 비밀번호
+  host: process.env.REDIS_HOST, // Redis 클라우드 호스트
+  port: process.env.REDIS_PORT, // Redis 클라우드 포트
+  password: process.env.REDIS_PASSWORD, // Redis 비밀번호
 });
 
 redisClient.on("connect", () => {
   console.info("Redis connected!");
 });
 
-// redisClient.set("foo", "bar");
-redisClient.get("foo", function (err, result) {
-  console.log(result);
-});
-
 redisClient.on("error", (err) => {
   console.error("Redis Client Error", err);
 });
+
+export { redisClient };
