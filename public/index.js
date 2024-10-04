@@ -59,6 +59,50 @@ let gameover = false;
 let hasAddedEventListenersForRestart = false;
 let waitingToStart = true;
 
+// 랭크 관련 시작 =========================================
+
+// 랭크 조회 API 호출
+async function getRank() {
+  const res = await fetch("/api/rank");
+  const data = await res.json();
+
+  console.log(data);
+  return data.formattedScores; // [{ uuid, timestamp, score }, ...] 형태
+}
+getRank(); // 접속 후 1번 불러옴
+
+// 테이블에 점수 추가
+async function appendTable() {
+  const rankList = document.getElementById("rank-list"); // tbody
+  const scores = await getRank();
+
+  // 기존 내용 초기화
+  rankList.innerHTML = "";
+
+  // 객체 데이터 1개 단위로 순회
+  scores.forEach(({ uuid, timestamp, score }) => {
+    const row = document.createElement("tr");
+
+    // 복무일, 관등성명, 날짜 데이터 추가
+    const scoreField = document.createElement("td");
+    scoreField.textContent = score; // 복무일
+    row.appendChild(scoreField);
+
+    const uuidField = document.createElement("td");
+    uuidField.textContent = uuid; // 관등성명
+    row.appendChild(uuidField);
+
+    const dateField = document.createElement("td");
+    const date = new Date(parseInt(timestamp)); // 타임스탬프를 Date 객체로
+    dateField.textContent = date.toLocaleDateString(); // 날짜 형식으로
+    row.appendChild(dateField);
+
+    rankList.appendChild(row); // 테이블에 행 추가
+  });
+}
+
+// 랭크 관련 끝 =============================================
+
 function createSprites() {
   // 비율에 맞는 크기
   // 유저
@@ -210,6 +254,8 @@ function handleSpace(e) {
 function handleEsc(e) {
   const modal = document.getElementById("modal");
   if (e.code === "Escape" && gameover) {
+    // 데이터 불러오기
+    appendTable();
     modal.classList.toggle("show");
   }
 }
@@ -300,6 +346,8 @@ setTimeout(() => {
   // ESC 키를 눌렀을 때 모달 창 토글
   window.addEventListener("keyup", (e) => {
     if (e.key === "Escape" && waitingToStart) {
+      // 데이터 불러오기
+      appendTable();
       const modal = document.getElementById("modal");
       modal.classList.toggle("show");
     }

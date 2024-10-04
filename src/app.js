@@ -2,6 +2,8 @@ import express from "express";
 import { createServer } from "http";
 import initSocket from "./init/socket.js";
 import { loadGameAssets } from "./init/assets.js";
+import UserRouter from "./routes/user.router.js";
+import RankingRouter from "./routes/ranking.router.js";
 
 const app = express();
 const server = createServer(app);
@@ -12,24 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
-// 하이스코어 조회하는 api
-app.get("/api/get-highscore/:userId", async (req, res, next) => {
-  try {
-    const { userId } = req.params;
-
-    // *하이스코어 조회
-    const highScore = await redisClient.zscore(userId, "highScore");
-
-    // *하이스코어 반환
-    if (!highScore) {
-      return res.status(400).json({ message: "최고 점수 없음" });
-    }
-
-    return res.status(200).json({ highScore });
-  } catch (error) {
-    console.log(error, "너의 어머니");
-  }
-});
+app.use("/api", [UserRouter, RankingRouter]);
 
 initSocket(server);
 
