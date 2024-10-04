@@ -255,11 +255,13 @@ function gameLoop(currentTime) {
 requestAnimationFrame(gameLoop);
 
 let once = true;
-window.addEventListener("keyup", (e) => {
-  if (e.key === " " && once) {
-    reset();
-    once = false;
-  }
-});
+setTimeout(() => {
+  window.addEventListener("keyup", (e) => {
+    if (e.key === " " && once) {
+      reset();
+      once = false;
+    }
+  });
+}, 3000);
 
 export { score };

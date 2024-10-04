@@ -2,8 +2,6 @@
   "name": "avoid_planet",
   "version": "1.0.0",
   "main": "src/app.js",
-  "repository": "https://github.com/hanwj75/avoid_planet.git",
-  "author": "hanwj75 <wjws9608@gmail.com>",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -11,6 +9,8 @@
   },
   "dependencies": {
     "express": "^4.21.0",
+    "ioredis": "^5.4.1",
+    "redis-cli": "^2.1.2",
     "socket.io": "^4.8.0",
     "uuid": "^10.0.0",
     "yarn": "^1.22.22"
