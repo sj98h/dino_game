@@ -150,9 +150,11 @@ function showStartGameText() {
   const fontSize = 20 * scaleRatio;
   ctx.font = `${fontSize}px Verdana`;
   ctx.fillStyle = "";
-  const x = canvas.width / 2.4;
+  const text = "SPACE로 입대 / ESC로 랭크 보기";
+  const textMetrics = ctx.measureText(text);
+  const x = (canvas.width - textMetrics.width) / 2;
   const y = canvas.height / 1.2;
-  ctx.fillText("SPACE로 입대", x, y);
+  ctx.fillText(text, x, y);
 }
 
 function updateGameSpeed(deltaTime) {
@@ -182,8 +184,20 @@ function setupGameReset() {
     hasAddedEventListenersForRestart = true;
 
     setTimeout(() => {
-      window.addEventListener("keyup", reset, { once: true });
-    }, 1000);
+      window.addEventListener("keyup", (event) => {
+        const modal = document.getElementById("modal");
+        if (event.code === "Space" && !modal.classList.contains("show")) {
+          reset();
+        }
+      });
+    }, 500);
+
+    window.addEventListener("keyup", (event) => {
+      if (event.key === "Escape") {
+        const modal = document.getElementById("modal");
+        modal.classList.toggle("show");
+      }
+    });
   }
 }
 
@@ -260,10 +274,26 @@ requestAnimationFrame(gameLoop);
 let once = true;
 setTimeout(() => {
   window.addEventListener("keyup", (e) => {
-    if (e.key === " " && once) {
+    const modal = document.getElementById("modal");
+    if (e.key === " " && once && !modal.classList.contains("show")) {
       reset();
       once = false;
     }
+  });
+
+  // ESC 키를 눌렀을 때 모달 창 토글
+  window.addEventListener("keyup", (e) => {
+    if (e.key === "Escape" && waitingToStart) {
+      const modal = document.getElementById("modal");
+      modal.classList.toggle("show");
+    }
+  });
+
+  // 모달 닫기 버튼 이벤트 리스너 추가
+  const closeModalButton = document.getElementById("close-modal");
+  closeModalButton.addEventListener("click", () => {
+    const modal = document.getElementById("modal");
+    modal.classList.remove("show");
   });
 }, 3000);
 
