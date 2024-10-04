@@ -28,7 +28,6 @@ class ItemController {
   }
 
   createItem() {
-    console.log(score.stageIndex - 1);
     const index = this.getRandomNumber(0, itemUnlock.data[score.stageIndex - 1].item_id.length - 1);
     const itemInfo = this.itemImages[index];
     const x = this.canvas.width * 1.5;

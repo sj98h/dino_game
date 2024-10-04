@@ -177,27 +177,40 @@ function reset() {
   if (title) {
     title.style.display = "none";
   }
+
+  // Space 키 이벤트 리스너 제거 및 재등록
+  window.removeEventListener("keyup", handleSpace);
+  window.addEventListener("keyup", handleSpace);
 }
 
+let onceForReset = true;
+let isEscListenerAdded = false;
 function setupGameReset() {
   if (!hasAddedEventListenersForRestart) {
     hasAddedEventListenersForRestart = true;
 
-    setTimeout(() => {
-      window.addEventListener("keyup", (event) => {
-        const modal = document.getElementById("modal");
-        if (event.code === "Space" && !modal.classList.contains("show")) {
-          reset();
-        }
-      });
-    }, 500);
+    // ESC 키 이벤트 리스너를 한 번만 등록
+    if (!isEscListenerAdded) {
+      window.addEventListener("keyup", handleEsc);
+      isEscListenerAdded = true;
+    }
+  }
+}
 
-    window.addEventListener("keyup", (event) => {
-      if (event.key === "Escape") {
-        const modal = document.getElementById("modal");
-        modal.classList.toggle("show");
-      }
-    });
+// Space 키 처리 함수
+function handleSpace(e) {
+  const modal = document.getElementById("modal");
+  if (e.code === "Space" && onceForReset && !modal.classList.contains("show")) {
+    onceForReset = false;
+    reset();
+  }
+}
+
+// ESC 키 처리 함수
+function handleEsc(e) {
+  const modal = document.getElementById("modal");
+  if (e.code === "Escape" && gameover) {
+    modal.classList.toggle("show");
   }
 }
 
@@ -242,8 +255,11 @@ async function gameLoop(currentTime) {
       score: score.score,
     });
     score.setHighScore();
+
+    onceForReset = true;
     setupGameReset();
   }
+
   const collideWithItem = itemController.collideWith(player);
   if (collideWithItem && collideWithItem.itemId) {
     score.getItem(collideWithItem.itemId);
