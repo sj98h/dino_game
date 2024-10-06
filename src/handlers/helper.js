@@ -22,7 +22,7 @@ export const handlerConnection = (socket, uuid) => {
   socket.emit("connection", { uuid }); //connection발사
 };
 
-export const handlerEvent = (io, socket, data) => {
+export const handlerEvent = async (io, socket, data) => {
   if (!CLIENT_VERSION.includes(data.clientVersion)) {
     socket.emit("response", { status: "fail", message: "클라이언트 버전이 잘못됨" });
     return;
@@ -34,7 +34,7 @@ export const handlerEvent = (io, socket, data) => {
     return;
   }
   //핸들러 실행
-  const response = handler(data.userId, data.payload);
+  const response = await handler(data.userId, data.payload);
   if (response.broadcast) {
     io.emit("response", "broadcast");
   }
