@@ -79,6 +79,20 @@ async function appendTable() {
   // 기존 내용 초기화
   rankList.innerHTML = "";
 
+  if (!scores || scores.length === 0) {
+    // 데이터가 없을 경우
+    const row = document.createElement("tr");
+    const nullField = document.createElement("td");
+
+    nullField.textContent = "데이터 없음";
+    nullField.setAttribute("colspan", 3); // 3개 컬럼 병합
+    nullField.style.textAlign = "center"; // 가운데 정렬
+
+    row.appendChild(nullField);
+    rankList.appendChild(row);
+    return; // 더 이상 처리하지 않음
+  }
+
   // 객체 데이터 1개 단위로 순회
   scores.forEach(({ uuid, timestamp, score }) => {
     const row = document.createElement("tr");
